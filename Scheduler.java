@@ -18,7 +18,7 @@ public class Scheduler {
 	    
 	    
 	    Process proc;						//proc stores current process
-	    Schedule master = new Schedule(); 	//master stores the crreated jobs in arraylist
+	    Schedule master = new Schedule("Master Schedule"); 	//master stores the crreated jobs in arraylist
 		
 	    
 	    
