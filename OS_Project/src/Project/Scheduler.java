@@ -42,6 +42,7 @@ public class Scheduler {
 	    */
 	    
 	   /*
+	    *Will be used to select which type of schedule (FIFO,SJF,RR)
 	    Scanner in = new Scanner(System.in);
 	    int sch;
 	    
@@ -63,7 +64,7 @@ public class Scheduler {
 		
 	}
 	
-	public static int Times(Schedule sched) {
+	public static void Times(Schedule sched) {
 		int num = sched.getNum();
 		
 		int wait = 0;					//wait stores wait time of each 
@@ -82,39 +83,37 @@ public class Scheduler {
 		long cycles;
 		
 		for(int i = 0; i < num; i++) {
+			
 			proc = sched.getProcess(i);
 			cycles = proc.getCycles();
 			
+			//wait time is equal to the time elapsed before running current process
 			wait = timeElapsed;
+			//wait sum is sum of wait time for all processes
 			waitSum += wait;
-			
+			//runTime is cycles of current process divided by speed of CPU used
 			runTime =  (cycles / speed);
-			
-			
-			
+			//tat or turn around time is the wait time + runtime 
 			tat = (int) (wait + runTime);
+			//tatSum is the sum of all turn around times
 			tatSum += tat;
-			
+			//total time elapsed at end of current process
 			timeElapsed += runTime;
 			
 		}
-		
+		//average wait time and average runt time
 		avgWT = waitSum / num;
 		avgTAT = tatSum / num;
 		
 		System.out.println("Wait time Average = " + avgWT);
 		System.out.println("Turn arount time Average = " + avgTAT);
 		
-		
-		
-		
-		
-		return 2;
+
 	}
 	
 	public static void FIFO(Schedule sched) {
 		System.out.println(sched.getNum());
-		
+		//gave all CPUS the same speed of 3 GHZ = 3*10^9 Hz
 		Schedule PA = new Schedule("CPU A");
 		PA.setSpeed(3000000000L);		//3GH
 		Schedule PB = new Schedule("CPU B");
@@ -130,7 +129,8 @@ public class Scheduler {
 		String cpu = "A";
 		
 		Process proc; 
-	
+		//distributes each process to a CPU,
+		//Starts with CPU PA and goes around
 		for(int i = 0; i < sched.getNum(); i++) {
 			
 			proc = sched.getProcess(i);

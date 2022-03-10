@@ -18,7 +18,7 @@ public class test {
 	    
 	    
 	    Process proc;						//proc stores current process
-	    Schedule master = new Schedule();	//master stores the crreated jobs in arraylist
+	    Schedule master = new Schedule("Master");	//master stores the crreated jobs in arraylist
 	    
 	    for(int i = 0; i < 250; i++) {		//for loop fetches processes from the file
 	    	proc = new Process();
