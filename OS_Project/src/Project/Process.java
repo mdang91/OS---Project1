@@ -35,6 +35,7 @@ public class Process {
 		return countPID;
 	}
 	public long createCycles() {
+		//not totally sure about these numbers or if someone has a better random
 		long min = 10000000L;
 	    long max = 10000000000000L;
 	    long cycles = min + (long) (Math.random() * (max - min));

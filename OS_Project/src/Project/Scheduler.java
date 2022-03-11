@@ -167,14 +167,16 @@ public class Scheduler {
 		
 		
 	}
-
+		//new way ( will not work for round robin
+		int wait = PA.waitTimeAvg();
+		int tat = PA.turnAroundTimeAvg();
 		
+		System.out.println("Wait time Average for CPU A = " + wait);
+		System.out.println("Turn arount time Average for CPU A = " + tat);
+
+		//old way 
 		Times(PA);
-		Times(PB);
-		Times(PC);
-		Times(PD);
-		Times(PE);
-		Times(PF);
+
 }
 }
 
