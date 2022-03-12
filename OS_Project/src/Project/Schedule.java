@@ -15,7 +15,24 @@ public class Schedule {
 		this.name = n;
 		num = 0;
 	}
+	public Schedule copySchedule() {
+		Schedule copy = new Schedule(this.getName() + "copy");
+		copy.setSpeed(this.getSpeed());
+		
+		
+		for(int i = 0; i < num; i++) {
+			copy.addProcess(this.getProcess(i));
+		}
+		
+		return copy;
+		
+	}
 	
+	public ArrayList<Process> getSched(){
+		return this.sched;
+	}
+	
+
 	public void addProcess(Process p) {			//adds a process to array list and increment num
 		sched.add(p);
 		num++;
@@ -23,6 +40,9 @@ public class Schedule {
 	
 	public int getNum() {						//return num (number or process in a list)
 		return num;
+	}
+	public String getName() {
+		return this.name;
 	}
 	
 	public Process getProcess(int i) {			//return the process at index i
@@ -32,25 +52,31 @@ public class Schedule {
 		return this.speed;
 	}
 	
-	public Schedule clone() {
-		return this;
-	}
+
 	
 	public void setSpeed(long sp) {				//used to set the speed of the CPU used
 		this.speed = sp;
 	}
-
-	public int waitTimeAvg() {					//returns average of wait times in this schedule
-		int num = this.getNum();
+	
+	public void removeProcess(int i) {
+		this.sched.remove(i);
+		this.num--;
+	}
+	
+	public int waitTimeAvg() {			//returns average of wait times in this schedule
 		
+		//input variables
+		int num = this.getNum();
+		long speed = this.getSpeed();
+		Process proc = new Process();
+		long cycles;
+		
+		//calculated variables		
 		int wait = 0;					//wait stores wait time of each 
 		int waitSum = 0;				//waitSum sums the wait times of each
 		int timeElapsed = 0;
 		long runTime = 0;
-		long speed = this.getSpeed();
-		
-		Process proc = new Process();
-		long cycles;
+
 		
 		for(int i = 0; i < num; i++) {
 			//get current process
@@ -73,14 +99,23 @@ public class Schedule {
 	
 	public int turnAroundTimeAvg () {			//returns average of turn around time for thi schedule
 		
-		int num = this.getNum();
+		
+		//input variable
+		Process proc = new Process();
+		int num = this.getNum();	
+		long speed = this.getSpeed();
+		long cycles;
+		
+		//calculated variables
 		long runTime = 0;
 		int timeElapsed = 0;
+		int turnAroundSum = 0;
+		int turnAroundAvg;
 		
 		
-		long speed = this.getSpeed();
-		Process proc = new Process();
-		long cycles;
+
+
+		
 		
 		for(int i = 0; i < num; i++) {
 			
@@ -93,12 +128,15 @@ public class Schedule {
 			//time elapsed at finish of runtime is turnaround time (for FIFO anf SJF)
 			timeElapsed += runTime;
 			
+			turnAroundSum += timeElapsed;
+			
 		}
 		
+		turnAroundAvg = turnAroundSum / num;
 		
 		
 		
-		return timeElapsed;
+		return turnAroundAvg;
 	}
 	
  	public void printSchedule() {

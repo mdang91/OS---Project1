@@ -1,6 +1,7 @@
 package Project;
 
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,86 +34,44 @@ public class Scheduler {
 	    }
 	    sc.close();
 	    
-	   /* 
-	    for(int i = 0; i < 250; i++) {
-	    	proc = master.getProcess(i);
-	    	
-	    	System.out.println("PID: " + proc.getPID() + "   Cyc: " + proc.getCycles() + "  Mem: " + proc.getMem());
-	    }
-	    */
+	    Boolean done = false;
 	    
-	   /*
-	    *Will be used to select which type of schedule (FIFO,SJF,RR)
 	    Scanner in = new Scanner(System.in);
-	    int sch;
 	    
-	    System.out.println("Enter 1 for FIFO: ");
-	    sch = in.nextInt();
-	    
-	    in.close();
-	    
-
-		*/
+	    while(!done) {
+	    	//Will be used to select which type of schedule (FIFO,SJF,RR)
+		    in = new Scanner(System.in);
+		    int sch;
+		    
+		    System.out.println("Enter \"1\" for FIFO ");
+		    System.out.println("Enter \"2\" for SJF ");
+		    System.out.print("Enter: ");
+		    sch = in.nextInt();
+			System.out.println();
+		    
+		    if(sch == 1) {
+			    System.out.println("FIFO: ");
+			    FIFO(master.copySchedule());
+		    }else if (sch == 2){
+			    System.out.println("SJF: ");
+			    SJF(master.copySchedule()); 	
+		    }else {
+		    	System.out.println("Program Ended");
+		    	done = true;
+		    }
+		    
+		    
+		    
+		   
 	    	
+	    }
 	    
-	
-	    FIFO(master.clone());
-	    
-	    
-	     
-	
-		
+	  
 	}
 	
-	public static void Times(Schedule sched) {
-		int num = sched.getNum();
-		
-		int wait = 0;					//wait stores wait time of each 
-		int waitSum = 0;				//waitSum sums the wait times of each
-		int tat =0;						//tat turn around time for each 
-		int tatSum = 0;					//tatSum sums the turnaround times
-		long runTime = 0;				//runtime calculation of each process
-		int timeElapsed = 0;			//total time elapsed
-		
-		int avgWT = 0;
-		int avgTAT = 0;
-		
-		long speed = sched.getSpeed();	//get processor speed
-		
-		Process proc = new Process();
-		long cycles;
-		
-		for(int i = 0; i < num; i++) {
-			
-			proc = sched.getProcess(i);
-			cycles = proc.getCycles();
-			
-			//wait time is equal to the time elapsed before running current process
-			wait = timeElapsed;
-			//wait sum is sum of wait time for all processes
-			waitSum += wait;
-			//runTime is cycles of current process divided by speed of CPU used
-			runTime =  (cycles / speed);
-			//tat or turn around time is the wait time + runtime 
-			tat = (int) (wait + runTime);
-			//tatSum is the sum of all turn around times
-			tatSum += tat;
-			//total time elapsed at end of current process
-			timeElapsed += runTime;
-			
-		}
-		//average wait time and average runt time
-		avgWT = waitSum / num;
-		avgTAT = tatSum / num;
-		
-		System.out.println("Wait time Average = " + avgWT);
-		System.out.println("Turn arount time Average = " + avgTAT);
-		
 
-	}
 	
 	public static void FIFO(Schedule sched) {
-		System.out.println(sched.getNum());
 		//gave all CPUS the same speed of 3 GHZ = 3*10^9 Hz
 		Schedule PA = new Schedule("CPU A");
 		PA.setSpeed(3000000000L);		//3GH
@@ -168,16 +127,74 @@ public class Scheduler {
 		
 	}
 		//new way ( will not work for round robin
-		int wait = PA.waitTimeAvg();
-		int tat = PA.turnAroundTimeAvg();
+		int waitSum = PA.waitTimeAvg();
+		int tatSum = PA.turnAroundTimeAvg();
+		waitSum += PB.waitTimeAvg();
+		tatSum += PB.turnAroundTimeAvg();
+		waitSum += PC.waitTimeAvg();
+		tatSum += PC.turnAroundTimeAvg();
+		waitSum += PD.waitTimeAvg();
+		tatSum += PD.turnAroundTimeAvg();
+		waitSum += PE.waitTimeAvg();
+		tatSum += PE.turnAroundTimeAvg();
+		waitSum += PF.waitTimeAvg();
+		tatSum += PF.turnAroundTimeAvg();
 		
-		System.out.println("Wait time Average for CPU A = " + wait);
-		System.out.println("Turn arount time Average for CPU A = " + tat);
+		int waitAvg = waitSum / 6;
+		int tatAvg = tatSum / 6;
+		
 
-		//old way 
-		Times(PA);
+		
 
-}
+		
+		
+		
+		System.out.println("Wait time Average = " + waitAvg);
+		System.out.println("Turn arount time Average = " + tatAvg);
+		System.out.println();
+	}
+	
+	public static void SJF(Schedule sched) {
+		//WIP
+		
+		//input varibles
+		
+		
+		//calculated variables
+		long low = sched.getProcess(0).getCycles();
+		int lowIndex = 0;
+		Schedule sorted = new Schedule("SJF");
+		
+		//while there still processes in sched
+		while(sched.getNum() > 0) {
+			//for each process still in sched
+			for(int i = 0; i<sched.getNum(); i++) {
+				//if current process is shorter than low process
+				if(sched.getProcess(i).getCycles() < low) {
+					//move new process to low
+					low = sched.getProcess(i).getCycles();
+					//save index
+					lowIndex = i;
+				}
+			}
+			//add the shortest process to the sorted schedule
+			sorted.addProcess(sched.getProcess(lowIndex));
+			//remove the shortest process from sched
+			sched.removeProcess(lowIndex);
+			
+			//if theres more to sort , resets low and lowIndex
+			if(sched.getNum() > 0) {
+				low = sched.getProcess(0).getCycles();
+				lowIndex = 0;
+			}
+			
+		}
+		//will distribute to each CPU evenly
+		FIFO(sorted);
+		
+		
+
+	}
 }
 
 
