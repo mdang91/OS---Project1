@@ -96,6 +96,57 @@ public class Schedule {
 		
 		return waitSum / num;
 	}
+	public int waitTimeAvgRR(long burstTime, Schedule master) {			//returns average of wait times in this schedule
+		
+		//input variables
+		int num = this.getNum();
+		
+		long speed = this.getSpeed();
+		Process proc = new Process();
+		long cycles;
+		
+		//calculated variables		
+		int wait = 0;					//wait stores wait time of each 
+		int waitSum = 0;				//waitSum sums the wait times of each
+		int timeElapsed = 0;
+		long runTime = 0;
+		
+		long burstCycles = burstTime * speed;
+		int index;
+		
+		for(int i = 0; i < num; i++) {
+			
+			runTime = burstTime;
+			//get current process
+			proc = this.getProcess(i);
+			cycles = proc.getCycles();
+			//store the index of the current process in the master list (not the round robin schedule)
+			index = proc.getPID() - 1;
+			
+			//if its the last run for this process
+			if(cycles <= burstCycles) {
+				runTime = cycles / speed;
+				
+				timeElapsed += runTime;
+				
+				//total wait time of the proceess = timeElapsed - the total cycles for the process from the master schedule
+				wait = (int) (timeElapsed - (master.getProcess(index).getCycles()/speed));
+			}
+			else {
+				timeElapsed += runTime;
+				wait = 0;
+				
+			}
+			
+			waitSum += wait;
+			
+			
+		}
+		
+		
+		
+		return waitSum;
+	}	
 	
 	public int turnAroundTimeAvg () {			//returns average of turn around time for thi schedule
 		
@@ -139,9 +190,60 @@ public class Schedule {
 		return turnAroundAvg;
 	}
 	
+	public int turnAroundTimeAvgRR(long burstTime, Schedule master) {			//returns average of wait times in this schedule
+		
+		//input variables
+		int num = this.getNum();
+		
+		long speed = this.getSpeed();
+		Process proc = new Process();
+		long cycles;
+		
+		//calculated variables		
+		int tat = 0;					//wait stores wait time of each 
+		int tatSum = 0;				//waitSum sums the wait times of each
+		int timeElapsed = 0;
+		long runTime = 0;
+		
+		long burstCycles = burstTime * speed;
+
+		
+		for(int i = 0; i < num; i++) {
+			
+			runTime = burstTime;
+			//get current process
+			proc = this.getProcess(i);
+			cycles = proc.getCycles();
+
+			
+			//if its the last run for this process
+			if(cycles <= burstCycles) {
+				runTime = cycles / speed;
+				
+				timeElapsed += runTime;
+				
+				//total wait time of the process = timeElapsed - the total cycles for the process from the master schedule
+				tat = (int) (timeElapsed);
+			}
+			else {
+				timeElapsed += runTime;
+				tat = 0;
+				
+			}
+			
+			tatSum += tat;
+			
+			
+		}
+		
+		
+		
+		return tatSum;
+	}	
+	
  	public void printSchedule() {
 		Process proc = new Process();
-		for(int i = 0; i < num; i++) {
+		for(int i = 0; i < this.num; i++) {
 			proc = this.getProcess(i);
 			System.out.println("PID: " + proc.getPID() + "   Cyc: " + proc.getCycles() + "  Mem: " + proc.getMem());
 		}
