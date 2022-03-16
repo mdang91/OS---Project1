@@ -38,6 +38,10 @@ public class Scheduler {
 	    
 	    Scanner in = new Scanner(System.in);
 	    
+	    master.setSpeed(3000000000L);
+	    
+	    Average(master);
+	    
 	    while(!done) {
 	    	//Will be used to select which type of schedule (FIFO,SJF,RR)
 		    in = new Scanner(System.in);
@@ -73,7 +77,31 @@ public class Scheduler {
 	  
 	}
 	
-
+	public static void Average(Schedule sched) {
+		Process proc = new Process();
+		long sumC = 0;
+		long averageC;
+		int num = sched.getNum();
+		long runtime;
+		int sumM = 0;
+		int averageM;
+		
+		for(int i = 0; i < num; i++) {
+			proc = sched.getProcess(i);
+			sumC += proc.getCycles();
+			sumM = proc.getMem();
+			
+		}
+		
+		averageC = sumC / num;
+		averageM = sumM / num;
+		runtime = averageC / sched.getSpeed();
+				
+		System.out.println("Average Cycles:  " + averageC);
+		System.out.println("Average Runtime: " + runtime + " seconds");
+		System.out.println("Average Memory:  " + averageM);
+	}
+	
 	
 	public static void FIFO(Schedule sched) {
 		//gave all CPUS the same speed of 3 GHZ = 3*10^9 Hz
