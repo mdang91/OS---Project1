@@ -68,7 +68,7 @@ public class Scheduler {
 		    	done = true;
 		    }
 		    
-		    
+
 		    
 		   
 	    	
@@ -209,7 +209,7 @@ public class Scheduler {
 			//remove the shortest process from sched
 			sched.removeProcess(lowIndex);
 			
-			//if theres more to sort , resets low and lowIndex
+			//if there's more to sort , resets low and lowIndex
 			if(sched.getNum() > 0) {
 				low = sched.getProcess(0).getCycles();
 				lowIndex = 0;
@@ -304,14 +304,14 @@ public class Scheduler {
 		
 		
 	}
-	public static void RR(Schedule sched) {
-		Schedule master = new Schedule("Master Copy");
-		master = sched.copySchedule();
+	public static void RR(Schedule master) {
+		Schedule mCopy = new Schedule("Master Copy");
+		mCopy = master.copySchedule();
 		
-		sched.setSpeed(3000000000L);
+		mCopy.setSpeed(3000000000L);
 		//retrieved
-		int num = sched.getNum();
-		long speed = sched.getSpeed();
+		int num = mCopy.getNum();
+		long speed = mCopy.getSpeed();
 		Process proc;
 		long cycles;
 		
@@ -321,17 +321,22 @@ public class Scheduler {
 		int timeElapsed = 0;
 		long runTime;
 		
-		Schedule RR = new Schedule("RR "+ sched.getName());
+		//stores the schedule in a RR order. 
+		Schedule RR = new Schedule("RR");
+		//copy all the fields of the current process to a temp process
 		Process copy = new Process();
+
 		
 		Boolean done = false;
 		int i = 0;
 		
+		
+		System.out.println(master.getNum() + "  " + mCopy.getNum() + "  ");	
 		while(!done) {
 			
-			
-			
-			proc = sched.getProcess(i);
+
+			//get current process and cycles
+			proc = mCopy.getProcess(i);
 			cycles = proc.getCycles();
 			
 			if(cycles <= burstCycles) {
@@ -340,10 +345,11 @@ public class Scheduler {
 				burstCycles = cycles;
 			}
 
-			//subtract the ammount of cycles ran from the current
-			sched.getProcess(i).setCycles(cycles - burstCycles);
+			//subtract the amount of cycles ran from the current
+			mCopy.getProcess(i).setCycles(cycles - burstCycles);
 			
-			if(sched.getProcess(i).getCycles() > 0) {
+			if(mCopy.getProcess(i).getCycles() > 0) {
+				//copy all the process fields to copy
 				copy = new Process();
 				copy.setPID(proc.getPID());
 				copy.setCycles(proc.getCycles());
@@ -351,16 +357,16 @@ public class Scheduler {
 				RR.addProcess(copy);
 			}
 			else {
-				sched.removeProcess(i);
+				mCopy.removeProcess(i);
 			}
 			
-			
-			if(sched.getNum() <= 0) {
+			//if no more processes in schedule
+			if(mCopy.getNum() <= 0) {
 				done = true;
 			}
 			i++;
 			
-			if(i >= sched.getNum()) {
+			if(i >= mCopy.getNum()) {
 				i = 0;
 			}
 			//reset burst cycles and burst time
@@ -368,6 +374,7 @@ public class Scheduler {
 			burstCycles = burstTime * speed;
 
 		}
+
 		//RR.printSchedule();
 
 		
@@ -377,6 +384,29 @@ public class Scheduler {
 		
 	}
 
+	public static void Question2(Schedule sched) {
+		
+	    
+	    Average(sched);
+	    
+	    Schedule PA = new Schedule("CPU A");
+		PA.setSpeed(2000000000L);		//3GH
+		Schedule PB = new Schedule("CPU B");
+		PB.setSpeed(2000000000L);
+		Schedule PC = new Schedule("CPU C");
+		PC.setSpeed(2000000000L);
+		Schedule PD = new Schedule("CPU D");
+		PD.setSpeed(4000000000L);
+		Schedule PE = new Schedule("CPU E");
+		PE.setSpeed(4000000000L);
+		Schedule PF = new Schedule("CPU F");
+		PF.setSpeed(4000000000L);
+		
+		
+		
+		
+		
+	}
 }
 
 

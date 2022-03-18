@@ -41,6 +41,23 @@ public class Question_2 {
 	    
 	    Average(master);
 	    
+	    Schedule PA = new Schedule("CPU A");
+		PA.setSpeed(2000000000L);		//3GH
+		Schedule PB = new Schedule("CPU B");
+		PB.setSpeed(2000000000L);
+		Schedule PC = new Schedule("CPU C");
+		PC.setSpeed(2000000000L);
+		Schedule PD = new Schedule("CPU D");
+		PD.setSpeed(4000000000L);
+		Schedule PE = new Schedule("CPU E");
+		PE.setSpeed(4000000000L);
+		Schedule PF = new Schedule("CPU F");
+		PF.setSpeed(4000000000L);
+		String cpu = "A";
+		
+ 
+	    
+	    
 
 	}
 	public static void Average(Schedule sched) {
@@ -67,5 +84,6 @@ public class Question_2 {
 		System.out.println("Average Runtime: " + runtime + " seconds");
 		System.out.println("Average Memory:  " + averageM);
 	}
+	
 	
 }

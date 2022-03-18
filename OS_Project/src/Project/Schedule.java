@@ -19,9 +19,19 @@ public class Schedule {
 		Schedule copy = new Schedule(this.getName() + "copy");
 		copy.setSpeed(this.getSpeed());
 		
+		Process pCopy = new Process();
+		Process temp = new Process();
 		
 		for(int i = 0; i < num; i++) {
-			copy.addProcess(this.getProcess(i));
+			temp = this.getProcess(i);
+			//copy all the process fields to copy
+			pCopy = new Process();
+			pCopy.setPID(temp.getPID());
+			pCopy.setCycles(temp.getCycles());
+			pCopy.setMem(temp.getMem());
+			copy.addProcess(pCopy);
+			
+			
 		}
 		
 		return copy;
