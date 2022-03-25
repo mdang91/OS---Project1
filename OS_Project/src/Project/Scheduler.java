@@ -11,17 +11,25 @@ public class Scheduler {
 	public static void main(String[] args) 
 			throws FileNotFoundException{
 		
-		File file = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
+		File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List2.csv");
 		//File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
 		
 	    Scanner sc = new Scanner(file);
+	    
+		File file1 = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List3.csv");
+		
+		
+	    Scanner sc1 = new Scanner(file1);
 	 
 	    // we just need to use \\; as delimiter
 	    sc.useDelimiter("\\;");
+	    sc1.useDelimiter("\\;");
 	    
 	    
-	    Process proc;						//proc stores current process
-	    Schedule master = new Schedule("Master Schedule"); 	//master stores the crreated jobs in arraylist
+	    Process proc;
+	    Process proc1;	//proc stores current process
+	    Schedule master = new Schedule("Master Schedule");	//master stores the crreated jobs in arraylist
+	    Schedule master1 = new Schedule("Master Schedule");
 		
 	    
 	    
@@ -34,16 +42,26 @@ public class Scheduler {
 	    	
 	    	master.addProcess(proc);
 	    }
+	    for(int i = 0; i < 200; i++){		//for loop fetches processes from the file 200 process
+	    	proc1 = new Process();
+	    	proc1.setPID(Integer.parseInt(sc1.next()));
+	    	proc1.setCycles(Long.parseLong(sc1.next()));
+	    	proc1.setMem(Integer.parseInt(sc1.next()));
+	    	
+	    	master1.addProcess(proc1);
+	    }
 	    sc.close();
+	    sc1.close();
 	    
 	    Boolean done = false;
 	    
 	    Scanner in = new Scanner(System.in);
 	    
 	    master.setSpeed(3000000000L);
+	    master1.setSpeed(3000000000L);
 	    
 	    Average(master);
-	    
+	    Average(master1);
 	   
 	    System.out.println("FIFO: ");
 	    FIFO(master.copySchedule());
@@ -57,7 +75,11 @@ public class Scheduler {
 		System.out.println("Question 2: ");
 		Question2(master.copySchedule());
 		    
-	    
+		System.out.println("Question 3: ");
+		Question3(master1.copySchedule());
+		
+		System.out.println("Question 3: ");
+		Question3(master.copySchedule());
 	  
 	}
 	
@@ -369,7 +391,7 @@ public class Scheduler {
 	}
 
 
-	public static void Question2(Schedule sched) {
+	public static void Question2(Schedule sched){
 		
 
 	    
@@ -598,8 +620,174 @@ public class Scheduler {
 		
 		
 	}
-}
 
+	public static void Question3(Schedule sched){
+	
+
+    
+    Schedule PA = new Schedule("CPU A");
+	PA.setSpeed(2000000000L);		//2GHz
+	Schedule PB = new Schedule("CPU B");
+	PB.setSpeed(2000000000L);
+	Schedule PC = new Schedule("CPU C");
+	PC.setSpeed(2000000000L);
+	Schedule PD = new Schedule("CPU D");
+	PD.setSpeed(4000000000L);		//4GHz
+	Schedule PE = new Schedule("CPU E");
+	PE.setSpeed(4000000000L);
+	Schedule PF = new Schedule("CPU F");
+	PF.setSpeed(4000000000L);
+	
+	
+	//input varibles
+	
+	
+	//calculated variables
+	long low = sched.getProcess(0).getCycles();
+	int lowIndex = 0;
+	Schedule sorted = new Schedule("SJF");
+	System.out.println("Number of Process: " + sched.getNum());
+	//while there still processes in sched
+	int q3 = sched.getNum()-50;
+	while(sched.getNum() > 0) {
+		//for each process still in sched
+		for(int i = 0; i<sched.getNum(); i++) {
+			//if current process is shorter than low process
+			if(sched.getProcess(i).getCycles() < low) {
+				//move new process to low
+				low = sched.getProcess(i).getCycles();
+				//save index
+				lowIndex = i;
+			}
+		}
+		//add the shortest process to the sorted schedule
+		sorted.addProcess(sched.getProcess(lowIndex));
+		//remove the shortest process from sched
+		sched.removeProcess(lowIndex);
+				
+		//if there's more to sort , resets low and lowIndex
+		if(sched.getNum() > 0) {
+			low = sched.getProcess(0).getCycles();
+			lowIndex = 0;
+		}
+				
+	}
+	
+	
+	
+	//get total number of cycles
+	long cycTotal = 0;
+	Process temp = new Process();
+	
+	for(int i = 0; i < sorted.getNum(); i++) {
+		temp = sorted.getProcess(i);
+		
+		cycTotal += temp.getCycles();
+		
+	}
+
+	
+	//CPU A,B,C should have 1/3 of the total cycles so that 
+	//CPU D,E,F have twice the total cycles 
+	long ABCTot = cycTotal * 1 / 3;
+	long defTot = cycTotal * 2 / 3;
+	int abcmem = 8000;
+	int defmem = 16000;
+
+	
+	//now the schedule is sorted to SJF
+	long abcCycles = 0;
+
+	String cpu = "A";
+	
+	Process proc; 
+	//distributes each process to a CPU,
+	//Starts with CPU PA and goes around
+	//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
+	Boolean abcDone = false;
+	
+	
+
+	for(int i = 0; i < sorted.getNum(); i++) {
+		
+		proc = sorted.getProcess(i);
+		
+		if((cpu == "A") && !abcDone && (proc.getMem() <= abcmem)) {
+			PA.addProcess(proc);
+			abcCycles += proc.getCycles();
+			
+			if((abcCycles >= ABCTot))  {
+				abcDone = true;
+				cpu = "D";
+			}
+			else cpu = "B";
+		}
+		else if((cpu == "B") && !abcDone && (proc.getMem() <= abcmem)) {
+			PB.addProcess(proc);
+			abcCycles += proc.getCycles();
+			if(abcCycles >= ABCTot) {
+				abcDone = true;
+				cpu = "D";
+			}
+			else cpu = "C";
+		}
+		else if((cpu == "C") && !abcDone && (proc.getMem() <= abcmem)) {
+			PC.addProcess(proc);
+			abcCycles += proc.getCycles();
+			
+			if(abcCycles >= ABCTot) {
+				abcDone = true;
+				cpu = "D";
+			}
+			else cpu = "D";
+		}
+		else if(cpu == "D") {
+			PD.addProcess(proc);
+			cpu = "E";
+		}
+		else if(cpu == "E") {
+			PE.addProcess(proc);
+			cpu = "F";
+		}
+		
+		else if(cpu == "F") {
+			PF.addProcess(proc);
+			
+			if(abcDone) cpu = "D";
+			else cpu = "A";
+			
+		}
+	
+}
+	
+
+	
+	//new way ( will not work for round robin
+	int waitSum = PA.waitTimeAvg();
+	int tatSum = PA.turnAroundTimeAvg();
+	waitSum += PB.waitTimeAvg();
+	tatSum += PB.turnAroundTimeAvg();
+	waitSum += PC.waitTimeAvg();
+	tatSum += PC.turnAroundTimeAvg();
+	waitSum += PD.waitTimeAvg();
+	tatSum += PD.turnAroundTimeAvg();
+	waitSum += PE.waitTimeAvg();
+	tatSum += PE.turnAroundTimeAvg();
+	waitSum += PF.waitTimeAvg();
+	tatSum += PF.turnAroundTimeAvg();
+	
+	int waitAvg = waitSum / 6;
+	int tatAvg = tatSum / 6;
+	
+
+	System.out.println("Attempt 1");
+	System.out.println("Average wait time = " + waitAvg);
+	System.out.println("Average turn-around time = " + tatAvg);
+	System.out.println();
+	
+	
+}
+}
 
 
 
