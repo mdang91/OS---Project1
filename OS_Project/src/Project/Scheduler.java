@@ -28,7 +28,7 @@ public class Scheduler {
 	    
 	    Process proc;
 	    Process proc1;	//proc stores current process
-	    Schedule master = new Schedule("Master Schedule");	//master stores the crreated jobs in arraylist
+	    Schedule master = new Schedule("Master Schedule");	//master stores the created jobs in arraylist
 	    Schedule master1 = new Schedule("Master Schedule");
 		
 	    
@@ -80,6 +80,9 @@ public class Scheduler {
 		
 		System.out.println("Question 3: ");
 		Question3(master.copySchedule());
+		
+		System.out.println("Question 4: ");
+		Question4();
 	  
 	}
 	
@@ -459,7 +462,7 @@ public class Scheduler {
 		//CPU A,B,C should have 1/3 of the total cycles so that 
 		//CPU D,E,F have twice the total cycles 
 		long ABCTot = cycTotal * 1 / 3;
-		//long defTot = cycTotal * 2 / 3;
+		long defTot = cycTotal * 2 / 3;
 
 /*		
 		String cpu = "D";
@@ -533,54 +536,44 @@ public class Scheduler {
 		//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
 		Boolean abcDone = false;
 		
+		
 	
-			
-		/*distibutes them evenly to ABCDEF until ABC total cycles are = to 1/3 of total cycles
-		 * then places the remaining processes in DEF. THis is so they total runtime of all the
-		 * schedules are similar 
-		 */
 		for(int i = 0; i < sorted.getNum(); i++) {
-			//get next process
+			
 			proc = sorted.getProcess(i);
 			
-			//places in A if ABC are full skips to DEF
 			if((cpu == "A") && !abcDone) {
+				//System.out.println("ABC:" + proc.getCycles());
 				PA.addProcess(proc);
 				abcCycles += proc.getCycles();
-				//if ABC schedule are at limit 
+				
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
-				//if ABC are below limit
 				else cpu = "B";
 			}
-			//places in B if ABC are full skips to DEF
 			else if((cpu == "B") && !abcDone) {
 				PB.addProcess(proc);
 				abcCycles += proc.getCycles();
-				//if ABC schedule are at limit 
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
-				//if ABC are below limit
 				else cpu = "C";
 			}
-			//places in C if ABC are full skips to DEF
 			else if((cpu == "C") && !abcDone) {
 				PC.addProcess(proc);
 				abcCycles += proc.getCycles();
-				//if ABC schedule are at limit 
+				
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
-				//if ABC are below limit
 				else cpu = "D";
 			}
-			//DEF like fifo
 			else if(cpu == "D") {
+				//System.out.println("DEF:" + proc.getCycles());
 				PD.addProcess(proc);
 				cpu = "E";
 			}
@@ -601,7 +594,7 @@ public class Scheduler {
 		
 
 		
-		//get average wait time and TAT
+		//new way ( will not work for round robin
 		int waitSum = PA.waitTimeAvg();
 		int tatSum = PA.turnAroundTimeAvg();
 		waitSum += PB.waitTimeAvg();
@@ -625,11 +618,6 @@ public class Scheduler {
 		System.out.println();
 		
 	
-		
-		
-		
-		
-		
 		
 	}
 
@@ -726,6 +714,7 @@ public class Scheduler {
 		
 		if((cpu == "A") && !abcDone && (proc.getMem() <= abcmem)) {
 			PA.addProcess(proc);
+			//System.out.println("ABC: " + proc.getMem());
 			abcCycles += proc.getCycles();
 			
 			if((abcCycles >= ABCTot))  {
@@ -748,12 +737,14 @@ public class Scheduler {
 			abcCycles += proc.getCycles();
 			
 			if(abcCycles >= ABCTot) {
+				
 				abcDone = true;
 				cpu = "D";
 			}
 			else cpu = "D";
 		}
 		else if(cpu == "D") {
+			//System.out.println("DEF:" + proc.getMem());
 			PD.addProcess(proc);
 			cpu = "E";
 		}
@@ -799,6 +790,109 @@ public class Scheduler {
 	
 	
 }
+
+	public static void Question4(){
+		
+
+	    
+	    Schedule PA = new Schedule("CPU A");
+		PA.setSpeed(2000000000L);		//2GHz
+		Schedule PB = new Schedule("CPU B");
+		PB.setSpeed(2000000000L);
+		Schedule PC = new Schedule("CPU C");
+		PC.setSpeed(2000000000L);
+		Schedule PD = new Schedule("CPU D");
+		PD.setSpeed(4000000000L);		//4GHz
+		Schedule PE = new Schedule("CPU E");
+		PE.setSpeed(4000000000L);
+		Schedule PF = new Schedule("CPU F");
+		PF.setSpeed(4000000000L);
+		
+		
+
+
+		
+		//CPU A,B,C should have 1/3 of the total cycles so that 
+		//CPU D,E,F have twice the total cycles 
+		int abcmem = 8000;
+		int defmem = 16000;
+
+		
+		//now the schedule is sorted to SJF
+		long abcCycles = 0;
+
+		String cpu = "A";
+		
+		Process proc; 
+		//distributes each process to a CPU,
+		//Starts with CPU PA and goes around
+		//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
+		//Boolean abcDone = false;
+		
+		int k = 250;
+		for(int i = 0; i < k; i++) {
+			proc = new Process();
+			
+			if(cpu == "A" && (proc.getMem() <= abcmem)) {
+
+				PA.addProcess(proc);
+				cpu = "B";
+			}
+			else if(cpu == "B" && (proc.getMem() <= abcmem)) {
+
+				PB.addProcess(proc);
+				cpu = "C";
+			}
+			else if(cpu == "C" && (proc.getMem() <= abcmem)) {
+
+				PC.addProcess(proc);
+				cpu = "D";
+			}
+			else if(cpu == "D" && (proc.getMem() > abcmem)) {
+
+				PD.addProcess(proc);
+				cpu = "E";
+			}
+			else if(cpu == "E" && (proc.getMem() > abcmem)) {
+
+				PE.addProcess(proc);
+				cpu = "F";
+			}
+			
+			else if(cpu == "F" && (proc.getMem() > abcmem)) {
+
+				PF.addProcess(proc);
+				cpu = "A";
+			}
+			
+		
+		}
+		
+		//new way ( will not work for round robin
+		int waitSum = PA.waitTimeAvg();
+		int tatSum = PA.turnAroundTimeAvg();
+		waitSum += PB.waitTimeAvg();
+		tatSum += PB.turnAroundTimeAvg();
+		waitSum += PC.waitTimeAvg();
+		tatSum += PC.turnAroundTimeAvg();
+		waitSum += PD.waitTimeAvg();
+		tatSum += PD.turnAroundTimeAvg();
+		waitSum += PE.waitTimeAvg();
+		tatSum += PE.turnAroundTimeAvg();
+		waitSum += PF.waitTimeAvg();
+		tatSum += PF.turnAroundTimeAvg();
+		
+		int waitAvg = waitSum / 6;
+		int tatAvg = tatSum / 6;
+		
+
+		System.out.println("Attempt 1");
+		System.out.println("Average wait time = " + waitAvg);
+		System.out.println("Average turn-around time = " + tatAvg);
+		System.out.println();
+		
+		
+	}
 }
 
 
