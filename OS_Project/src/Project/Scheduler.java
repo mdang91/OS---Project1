@@ -459,7 +459,7 @@ public class Scheduler {
 		//CPU A,B,C should have 1/3 of the total cycles so that 
 		//CPU D,E,F have twice the total cycles 
 		long ABCTot = cycTotal * 1 / 3;
-		long defTot = cycTotal * 2 / 3;
+		//long defTot = cycTotal * 2 / 3;
 
 /*		
 		String cpu = "D";
@@ -533,41 +533,53 @@ public class Scheduler {
 		//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
 		Boolean abcDone = false;
 		
-		
 	
-		for(int i = 0; i < sorted.getNum(); i++) {
 			
+		/*distibutes them evenly to ABCDEF until ABC total cycles are = to 1/3 of total cycles
+		 * then places the remaining processes in DEF. THis is so they total runtime of all the
+		 * schedules are similar 
+		 */
+		for(int i = 0; i < sorted.getNum(); i++) {
+			//get next process
 			proc = sorted.getProcess(i);
 			
+			//places in A if ABC are full skips to DEF
 			if((cpu == "A") && !abcDone) {
 				PA.addProcess(proc);
 				abcCycles += proc.getCycles();
-				
+				//if ABC schedule are at limit 
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
+				//if ABC are below limit
 				else cpu = "B";
 			}
+			//places in B if ABC are full skips to DEF
 			else if((cpu == "B") && !abcDone) {
 				PB.addProcess(proc);
 				abcCycles += proc.getCycles();
+				//if ABC schedule are at limit 
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
+				//if ABC are below limit
 				else cpu = "C";
 			}
+			//places in C if ABC are full skips to DEF
 			else if((cpu == "C") && !abcDone) {
 				PC.addProcess(proc);
 				abcCycles += proc.getCycles();
-				
+				//if ABC schedule are at limit 
 				if(abcCycles >= ABCTot) {
 					abcDone = true;
 					cpu = "D";
 				}
+				//if ABC are below limit
 				else cpu = "D";
 			}
+			//DEF like fifo
 			else if(cpu == "D") {
 				PD.addProcess(proc);
 				cpu = "E";
@@ -589,7 +601,7 @@ public class Scheduler {
 		
 
 		
-		//new way ( will not work for round robin
+		//get average wait time and TAT
 		int waitSum = PA.waitTimeAvg();
 		int tatSum = PA.turnAroundTimeAvg();
 		waitSum += PB.waitTimeAvg();
