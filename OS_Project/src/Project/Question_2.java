@@ -11,7 +11,7 @@ public class Question_2 {
 	public static void main(String[] args) 
 			throws FileNotFoundException{
 		
-		File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
+		File file = new File("/Users/bryanp/eclipse-workspace/OS_Project/Process_List.txt");
 	    Scanner sc = new Scanner(file);
 	 
 	    // we just need to use \\; as delimiter
@@ -268,7 +268,7 @@ public class Question_2 {
 
 		}
 
-		//RR.printSchedule();
+		RR.printSchedule();
 
 		RRSched(RR, master, burstTime);
 		

@@ -24,7 +24,7 @@ public class ProcessGenerator {
 			try {
 			     
 			      //each process written on new line of file
-			      FileWriter fw = new FileWriter("Process_List.csv", true);
+			      FileWriter fw = new FileWriter("Process_List2.txt", true);
 			      BufferedWriter bw = new BufferedWriter(fw);
 			      bw.write(proc.getPID() + ";" + proc.getCycles() + ";" + proc.getMem() + ";");
 			      bw.close();

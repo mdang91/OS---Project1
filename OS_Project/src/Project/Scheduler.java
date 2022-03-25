@@ -11,7 +11,9 @@ public class Scheduler {
 	public static void main(String[] args) 
 			throws FileNotFoundException{
 		
-		File file = new File("/Users/bryanp/eclipse-workspace/OS_Project/Process_List.txt");
+		File file = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
+		//File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
+		
 	    Scanner sc = new Scanner(file);
 	 
 	    // we just need to use \\; as delimiter
@@ -383,6 +385,7 @@ public class Scheduler {
 		
 		
 	}
+
 
 	public static void Question2(Schedule sched) {
 		

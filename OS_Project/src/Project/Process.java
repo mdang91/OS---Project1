@@ -43,7 +43,7 @@ public class Process {
 	    return cycles;
 	}
 	public int createMem() {
-		int min = 1000;						//in BYTES
+		int min = 1;						//in MBYTES
 	    int max = 16000;
 	    int mem = min + (int) (Math.random() * (max - min));
 	    
