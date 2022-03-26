@@ -1,21 +1,22 @@
 package Project;
 
-
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class Scheduler {
+public class Scheduler{
 	
 	public static void main(String[] args) 
 			throws FileNotFoundException{
 		
+		//file have 250 procecsses
 		File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List2.csv");
 		//File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
 		
 	    Scanner sc = new Scanner(file);
 	    
+	    //file have 200 processes
 		File file1 = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List3.csv");
 		
 		
@@ -32,9 +33,7 @@ public class Scheduler {
 	    Schedule master1 = new Schedule("Master Schedule");
 		
 	    
-	    
-	    
-	    for(int i = 0; i < 250; i++){		//for loop fetches processes from the file
+	    for(int i = 0; i < 250; i++){		//for loop fetches processes from the file 250 processes
 	    	proc = new Process();
 	    	proc.setPID(Integer.parseInt(sc.next()));
 	    	proc.setCycles(Long.parseLong(sc.next()));
@@ -42,7 +41,9 @@ public class Scheduler {
 	    	
 	    	master.addProcess(proc);
 	    }
-	    for(int i = 0; i < 200; i++){		//for loop fetches processes from the file 200 process
+	    sc.close();
+	    
+	    for(int i = 0; i < 200; i++){		//for loop fetches processes from the file 200 processes
 	    	proc1 = new Process();
 	    	proc1.setPID(Integer.parseInt(sc1.next()));
 	    	proc1.setCycles(Long.parseLong(sc1.next()));
@@ -50,19 +51,21 @@ public class Scheduler {
 	    	
 	    	master1.addProcess(proc1);
 	    }
-	    sc.close();
 	    sc1.close();
 	    
-	    Boolean done = false;
+	    //Boolean done = false;
 	    
 	    Scanner in = new Scanner(System.in);
 	    
 	    master.setSpeed(3000000000L);
 	    master1.setSpeed(3000000000L);
 	    
+	    System.out.println("==== 250 Processes ====");
 	    Average(master);
+	    System.out.println("\n==== 200 Processes ====");
 	    Average(master1);
-	   
+	    
+	    System.out.println("\n==== Q1 ==== ");
 	    System.out.println("FIFO: ");
 	    FIFO(master.copySchedule());
 		
@@ -72,19 +75,26 @@ public class Scheduler {
 		System.out.println("RR: ");
 		RR(master.copySchedule()); 	
 		
-		System.out.println("Question 2: ");
+		System.out.println("==== Q2 ==== ");
 		Question2(master.copySchedule());
-		    
-		System.out.println("Question 3: ");
+		
+		//200 processes
+		System.out.println("==== Q3 ==== ");
 		Question3(master1.copySchedule());
 		
-		System.out.println("Question 3: ");
+		//250 processes
 		Question3(master.copySchedule());
 		
-		System.out.println("Question 4: ");
+		
+		System.out.println("==== Q4 - Deploy based on our algorithm ====");
 		Question4();
+		
+		//System.out.println("==== Q4 - FIFO - SJF - RR ====");
+		//FIFO4();
 	  
 	}
+	
+	
 	
 	public static void Average(Schedule sched) {
 		Process proc = new Process();
@@ -110,8 +120,7 @@ public class Scheduler {
 		System.out.println("Average Runtime: " + runtime + " seconds");
 		System.out.println("Average Memory:  " + averageM);
 	}
-	
-	
+		
 	public static void FIFO(Schedule sched) {
 		//gave all CPUS the same speed of 3 GHZ = 3*10^9 Hz
 		Schedule PA = new Schedule("CPU A");
@@ -180,11 +189,6 @@ public class Scheduler {
 		int tatAvg = tatSum / 6;
 		
 
-		
-
-		
-		
-		
 		System.out.println("Average wait time = " + waitAvg);
 		System.out.println("Average turn-around time = " + tatAvg);
 		System.out.println();
@@ -313,6 +317,7 @@ public class Scheduler {
 		
 		
 	}
+	
 	public static void RR(Schedule master) {
 		Schedule mCopy = new Schedule("Master Copy");
 		mCopy = master.copySchedule();
@@ -393,13 +398,12 @@ public class Scheduler {
 		
 	}
 
-
 	public static void Question2(Schedule sched){
 		
 
 	    
 	    Schedule PA = new Schedule("CPU A");
-		PA.setSpeed(2000000000L);		//3GH
+		PA.setSpeed(2000000000L);		//2GH
 		Schedule PB = new Schedule("CPU B");
 		PB.setSpeed(2000000000L);
 		Schedule PC = new Schedule("CPU C");
@@ -624,7 +628,6 @@ public class Scheduler {
 	public static void Question3(Schedule sched){
 	
 
-    
     Schedule PA = new Schedule("CPU A");
 	PA.setSpeed(2000000000L);		//2GHz
 	Schedule PB = new Schedule("CPU B");
@@ -783,7 +786,6 @@ public class Scheduler {
 	int tatAvg = tatSum / 6;
 	
 
-	System.out.println("Attempt 1");
 	System.out.println("Average wait time = " + waitAvg);
 	System.out.println("Average turn-around time = " + tatAvg);
 	System.out.println();
@@ -794,7 +796,6 @@ public class Scheduler {
 	public static void Question4(){
 		
 
-	    
 	    Schedule PA = new Schedule("CPU A");
 		PA.setSpeed(2000000000L);		//2GHz
 		Schedule PB = new Schedule("CPU B");
@@ -833,6 +834,46 @@ public class Scheduler {
 		for(int i = 0; i < k; i++) {
 			proc = new Process();
 			
+			/*if(((cpu == "D") || (cpu == "E") || (cpu == "F")) && proc.getMem() <= 8000) {
+				cpu = "A";
+			}
+
+			if(((cpu == "A") || (cpu == "B") || (cpu == "C"))  && proc.getMem() >= 8000) {
+				cpu = "D";
+			}
+
+			if(cpu == "A") {
+				//System.out.println("A: " + proc.getMem());
+				PA.addProcess(proc);
+				cpu = "B";
+			}
+			else if(cpu == "B") {
+				//System.out.println("B: " + proc.getMem());
+				PB.addProcess(proc);
+				cpu = "C";
+			}
+			else if(cpu == "C") {
+				//System.out.println("C: " + proc.getMem());
+				PC.addProcess(proc);
+				cpu = "A";
+			}
+			else if(cpu == "D"){
+				//System.out.println("D: " + proc.getMem());
+				PD.addProcess(proc);
+				cpu = "E";
+			}
+			else if(cpu == "E") {
+				//System.out.println("E: " + proc.getMem());
+				PE.addProcess(proc);
+				cpu = "F";
+			}
+				
+			else if(cpu == "F") {
+				//System.out.println("F: " + proc.getMem());
+				PF.addProcess(proc);
+				cpu = "A";
+				
+			}*/
 			if(cpu == "A" && (proc.getMem() <= abcmem)) {
 
 				PA.addProcess(proc);
@@ -864,7 +905,6 @@ public class Scheduler {
 				PF.addProcess(proc);
 				cpu = "A";
 			}
-			
 		
 		}
 		
@@ -885,14 +925,127 @@ public class Scheduler {
 		int waitAvg = waitSum / 6;
 		int tatAvg = tatSum / 6;
 		
-
-		System.out.println("Attempt 1");
 		System.out.println("Average wait time = " + waitAvg);
 		System.out.println("Average turn-around time = " + tatAvg);
 		System.out.println();
 		
+	}
+
+	public static void FIFO4(){
+		//gave all CPUS the same speed of 3 GHZ = 3*10^9 Hz
+		Schedule PA = new Schedule("CPU A");
+		PA.setSpeed(3000000000L);		//3GH
+		Schedule PB = new Schedule("CPU B");
+		PB.setSpeed(3000000000L);
+		Schedule PC = new Schedule("CPU C");
+		PC.setSpeed(3000000000L);
+		Schedule PD = new Schedule("CPU D");
+		PD.setSpeed(3000000000L);
+		Schedule PE = new Schedule("CPU E");
+		PE.setSpeed(3000000000L);
+		Schedule PF = new Schedule("CPU F");
+		PF.setSpeed(3000000000L);
+		String cpu = "A";
+		
+		Process proc; 
+		//distributes each process to a CPU,
+		//Starts with CPU PA and goes around
+		int k = 250;
+		for(int i = 0; i < k; i++) {
+			
+			proc = new Process();
+			
+			if(cpu == "A") {
+				PA.addProcess(proc);
+				cpu = "B";
+			}
+			else if(cpu == "B") {
+				PB.addProcess(proc);
+				cpu = "C";
+			}
+			else if(cpu == "C") {
+				PC.addProcess(proc);
+				cpu = "D";
+			}
+			else if(cpu == "D") {
+				PD.addProcess(proc);
+				cpu = "E";
+			}
+			else if(cpu == "E") {
+				PE.addProcess(proc);
+				cpu = "F";
+			}
+			
+			else if(cpu == "F") {
+				PF.addProcess(proc);
+				cpu = "A";
+			}
+		
+		}
+		//new way ( will not work for round robin
+		int waitSum = PA.waitTimeAvg();
+		int tatSum = PA.turnAroundTimeAvg();
+		waitSum += PB.waitTimeAvg();
+		tatSum += PB.turnAroundTimeAvg();
+		waitSum += PC.waitTimeAvg();
+		tatSum += PC.turnAroundTimeAvg();
+		waitSum += PD.waitTimeAvg();
+		tatSum += PD.turnAroundTimeAvg();
+		waitSum += PE.waitTimeAvg();
+		tatSum += PE.turnAroundTimeAvg();
+		waitSum += PF.waitTimeAvg();
+		tatSum += PF.turnAroundTimeAvg();
+		
+		int waitAvg = waitSum / 6;
+		int tatAvg = tatSum / 6;
+		
+
+		System.out.println("FIFO");
+		System.out.println("Average wait time = " + waitAvg);
+		System.out.println("Average turn-around time = " + tatAvg);
+		System.out.println();
+	}
+
+	public static void SJF04(Schedule sched) {
+		
+		
+		//input varibles
+		
+		
+		//calculated variables
+		long low = sched.getProcess(0).getCycles();
+		int lowIndex = 0;
+		Schedule sorted = new Schedule("SJF");
+		
+		//while there still processes in sched
+		while(sched.getNum() > 0) {
+			//for each process still in sched
+			for(int i = 0; i<sched.getNum(); i++) {
+				//if current process is shorter than low process
+				if(sched.getProcess(i).getCycles() < low) {
+					//move new process to low
+					low = sched.getProcess(i).getCycles();
+					//save index
+					lowIndex = i;
+				}
+			}
+			//add the shortest process to the sorted schedule
+			sorted.addProcess(sched.getProcess(lowIndex));
+			//remove the shortest process from sched
+			sched.removeProcess(lowIndex);
+			
+			//if there's more to sort , resets low and lowIndex
+			if(sched.getNum() > 0) {
+				low = sched.getProcess(0).getCycles();
+				lowIndex = 0;
+			}
+			
+		}
+		//will distribute to each CPU evenly
+		FIFO(sorted);
 		
 	}
+
 }
 
 
