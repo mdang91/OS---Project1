@@ -11,13 +11,14 @@ public class Scheduler{
 			throws FileNotFoundException{
 		
 		//file have 250 procecsses
-		File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List2.csv");
+		File file = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
 		//File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
+		///Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt
 		
 	    Scanner sc = new Scanner(file);
 	    
 	    //file have 200 processes
-		File file1 = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List3.csv");
+		File file1 = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
 		
 		
 	    Scanner sc1 = new Scanner(file1);
@@ -118,7 +119,7 @@ public class Scheduler{
 				
 		System.out.println("Average Cycles:  " + averageC);
 		System.out.println("Average Runtime: " + runtime + " seconds");
-		System.out.println("Average Memory:  " + averageM);
+		//System.out.println("Average Memory:  " + averageM);
 	}
 		
 	public static void FIFO(Schedule sched) {
@@ -310,7 +311,7 @@ public class Scheduler{
 		int waitAvg = waitSum / master.getNum();
 		int tatAvg = tatSum / master.getNum();
 		
-		System.out.println("RR:");
+		
 		System.out.println("Average wait time: " + waitAvg);
 		System.out.println("Average turn-around time: " + tatAvg);
 		System.out.println();
@@ -345,7 +346,7 @@ public class Scheduler{
 		int i = 0;
 		
 		
-		System.out.println(master.getNum() + "  " + mCopy.getNum() + "  ");	
+		//System.out.println(master.getNum() + "  " + mCopy.getNum() + "  ");	
 		while(!done) {
 			
 
