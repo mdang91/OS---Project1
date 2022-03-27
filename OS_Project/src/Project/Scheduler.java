@@ -395,7 +395,6 @@ public class Scheduler{
 		RRSched(RR, master, burstTime);
 		
 		
-		
 	}
 
 	public static void Question2(Schedule sched){
@@ -539,8 +538,6 @@ public class Scheduler{
 		//Starts with CPU PA and goes around
 		//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
 		Boolean abcDone = false;
-		
-		
 	
 		for(int i = 0; i < sorted.getNum(); i++) {
 			
@@ -595,9 +592,7 @@ public class Scheduler{
 			}
 		
 	}
-		
-
-		
+			
 		//new way ( will not work for round robin
 		int waitSum = PA.waitTimeAvg();
 		int tatSum = PA.turnAroundTimeAvg();
@@ -615,13 +610,10 @@ public class Scheduler{
 		int waitAvg = waitSum / 6;
 		int tatAvg = tatSum / 6;
 		
-
 		System.out.println("Attempt 1");
 		System.out.println("Average wait time = " + waitAvg);
 		System.out.println("Average turn-around time = " + tatAvg);
 		System.out.println();
-		
-	
 		
 	}
 
@@ -675,7 +667,6 @@ public class Scheduler{
 		}
 				
 	}
-	
 	
 	
 	//get total number of cycles
@@ -764,9 +755,7 @@ public class Scheduler{
 			
 		}
 	
-}
-	
-
+	}
 	
 	//new way ( will not work for round robin
 	int waitSum = PA.waitTimeAvg();
@@ -795,7 +784,6 @@ public class Scheduler{
 
 	public static void Question4(){
 		
-
 	    Schedule PA = new Schedule("CPU A");
 		PA.setSpeed(2000000000L);		//2GHz
 		Schedule PB = new Schedule("CPU B");
@@ -809,17 +797,10 @@ public class Scheduler{
 		Schedule PF = new Schedule("CPU F");
 		PF.setSpeed(4000000000L);
 		
-		
 
-
-		
-		//CPU A,B,C should have 1/3 of the total cycles so that 
-		//CPU D,E,F have twice the total cycles 
 		int abcmem = 8000;
 		int defmem = 16000;
 
-		
-		//now the schedule is sorted to SJF
 		long abcCycles = 0;
 
 		String cpu = "A";
@@ -827,53 +808,11 @@ public class Scheduler{
 		Process proc; 
 		//distributes each process to a CPU,
 		//Starts with CPU PA and goes around
-		//if ABC have 1/3 of total cycles already then they are removed from the distribution cycle
-		//Boolean abcDone = false;
 		
 		int k = 250;
 		for(int i = 0; i < k; i++) {
 			proc = new Process();
 			
-			/*if(((cpu == "D") || (cpu == "E") || (cpu == "F")) && proc.getMem() <= 8000) {
-				cpu = "A";
-			}
-
-			if(((cpu == "A") || (cpu == "B") || (cpu == "C"))  && proc.getMem() >= 8000) {
-				cpu = "D";
-			}
-
-			if(cpu == "A") {
-				//System.out.println("A: " + proc.getMem());
-				PA.addProcess(proc);
-				cpu = "B";
-			}
-			else if(cpu == "B") {
-				//System.out.println("B: " + proc.getMem());
-				PB.addProcess(proc);
-				cpu = "C";
-			}
-			else if(cpu == "C") {
-				//System.out.println("C: " + proc.getMem());
-				PC.addProcess(proc);
-				cpu = "A";
-			}
-			else if(cpu == "D"){
-				//System.out.println("D: " + proc.getMem());
-				PD.addProcess(proc);
-				cpu = "E";
-			}
-			else if(cpu == "E") {
-				//System.out.println("E: " + proc.getMem());
-				PE.addProcess(proc);
-				cpu = "F";
-			}
-				
-			else if(cpu == "F") {
-				//System.out.println("F: " + proc.getMem());
-				PF.addProcess(proc);
-				cpu = "A";
-				
-			}*/
 			if(cpu == "A" && (proc.getMem() <= abcmem)) {
 
 				PA.addProcess(proc);
@@ -1004,46 +943,6 @@ public class Scheduler{
 		System.out.println("Average wait time = " + waitAvg);
 		System.out.println("Average turn-around time = " + tatAvg);
 		System.out.println();
-	}
-
-	public static void SJF04(Schedule sched) {
-		
-		
-		//input varibles
-		
-		
-		//calculated variables
-		long low = sched.getProcess(0).getCycles();
-		int lowIndex = 0;
-		Schedule sorted = new Schedule("SJF");
-		
-		//while there still processes in sched
-		while(sched.getNum() > 0) {
-			//for each process still in sched
-			for(int i = 0; i<sched.getNum(); i++) {
-				//if current process is shorter than low process
-				if(sched.getProcess(i).getCycles() < low) {
-					//move new process to low
-					low = sched.getProcess(i).getCycles();
-					//save index
-					lowIndex = i;
-				}
-			}
-			//add the shortest process to the sorted schedule
-			sorted.addProcess(sched.getProcess(lowIndex));
-			//remove the shortest process from sched
-			sched.removeProcess(lowIndex);
-			
-			//if there's more to sort , resets low and lowIndex
-			if(sched.getNum() > 0) {
-				low = sched.getProcess(0).getCycles();
-				lowIndex = 0;
-			}
-			
-		}
-		//will distribute to each CPU evenly
-		FIFO(sorted);
-		
 	}
 
 }
