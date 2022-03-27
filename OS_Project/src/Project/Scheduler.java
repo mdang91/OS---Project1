@@ -11,14 +11,14 @@ public class Scheduler{
 			throws FileNotFoundException{
 		
 		//file have 250 procecsses
-		File file = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
+		File file = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.csv");
 		//File file = new File("E:/GSU-GPC/10th - Spring 2022 (4)/OPERATING SYSTEMS/Project 1/OS_Project/Process_List.csv");
 		///Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt
 		
 	    Scanner sc = new Scanner(file);
 	    
 	    //file have 200 processes
-		File file1 = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.txt");
+		File file1 = new File("/Users/bryanp/Documents/GitHub/OS-Project1/OS_Project/Process_List2.csv");
 		
 		
 	    Scanner sc1 = new Scanner(file1);
